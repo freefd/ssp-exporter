@@ -1,0 +1,89 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  identifiers:
+    type: object
+    properties:
+      AlmatelRussia:
+        $ref: '#/$defs/identifier_list'
+      ArubaCloud:
+        $ref: '#/$defs/identifier_list'
+      MegafonRussiaB2C:
+        $ref: '#/$defs/identifier_list'
+      T2RussiaB2C:
+        $ref: '#/$defs/identifier_list'
+      Vultr:
+        $ref: '#/$defs/identifier_list'
+      WifireRussia:
+        $ref: '#/$defs/identifier_list'
+    required:
+      - AlmatelRussia
+      - ArubaCloud
+      - MegafonRussiaB2C
+#      - T2RussiaB2C # dysfunctional since mid-2024
+      - Vultr
+      - WifireRussia
+  service:
+    type: object
+    properties:
+      messages:
+        type: object
+        patternProperties:
+          ^[A-z_]+$:
+            type: integer
+        propertyNames:
+          pattern: ^[A-z_]+$
+        required:
+          - init
+          - disabled
+      user_agents:
+        type: array
+        items:
+          type: string
+    required:
+      # - bind_address
+      # - bind_port
+      - messages
+      - user_agents
+required:
+  - service
+  - identifiers
+$defs:
+  identifier_list:
+    type:
+      - array
+      - "null"
+    items:
+      type: object
+      properties:
+        identifier:
+          type:
+            - string
+            - integer
+        labels:
+          type: object
+          properties:
+            category:
+              type: string
+            currency:
+              type: string
+            description:
+              type: string
+          required:
+            - currency
+            - description
+        password:
+          type:
+            - string
+            - integer
+        disabled:
+          type: boolean
+        tls_verify:
+          type: boolean
+        poll_interval:
+          type: integer
+          minimum: 1
+      required:
+        - identifier
+        - password
+        - labels

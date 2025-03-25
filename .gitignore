@@ -1,0 +1,6 @@
+__pycache__/
+.vscode/
+*.log
+*.drawio
+config/production_exporter.yaml
+test.py

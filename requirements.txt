@@ -1,0 +1,6 @@
+jsonschema
+lxml
+prometheus_client
+PyYAML
+Requests
+schedule
