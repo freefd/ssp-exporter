@@ -17,21 +17,21 @@ This exporter is designed to export balance value from Self Service Portals and 
 #### Workflow
 ```mermaid
 flowchart TB
-    Step1(Load configuration) --> Step2(Validate configuration by JSON schema)
+    Step1(Load configuration) --> Step2(Validate configuration)
     Step2 --> Step3(Load providers)
     Step3 --> Step4(Schedule async provider jobs)
-    subgraph onetime_run ["<div style="width:17em; display:flex; justify-content: flex-end;">One time run</div>"]
+    subgraph onetime_run ["<div style="width:12em; display:flex; justify-content: flex-end;">Run once</div>"]
       Step5(Run provider jobs first time)
     end
     Step3 --> Step5
     Step5 --> Step8
     Step4 --> Step7
-    subgraph scheduler_loop ["<div style="width:20em; display:flex; justify-content: flex-end;">By a schedule</div>"]
+    subgraph scheduler_loop ["<div style="width:12em; display:flex; justify-content: flex-end;">On schedule</div>"]
         Step7(Run provider's configuration by a timer)--> Step8(Collect data)
         Step8 --> Step6(Store collected data)
     end
     Step6 --> Step9
-    subgraph metrics_loop ["<div style="width:22em; display:flex; justify-content: flex-end;">On collector's request</div>"]
+    subgraph metrics_loop ["<div style="width:12em; display:flex; justify-content: flex-end;">On demand</div>"]
         Step9(Publish metrics with collected data)
     end
 ```
