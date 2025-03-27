@@ -4,7 +4,6 @@
 
 from dataclasses import dataclass
 
-
 import argparse
 import json
 import logging

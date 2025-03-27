@@ -21,7 +21,7 @@ class T2RussiaB2C:
     messages: list[str] = None
     user_agent: str = None
     identifier: str = None
-    labels: dict[str, (str, int, float)] = None
+    labels: dict[str, (bool, int, float, str)] = None
     password: str = None
     disabled: bool = True
     tls_verify: bool = False

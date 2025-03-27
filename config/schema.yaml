@@ -41,8 +41,6 @@ properties:
         items:
           type: string
     required:
-      # - bind_address
-      # - bind_port
       - messages
       - user_agents
 required:
@@ -63,8 +61,6 @@ $defs:
         labels:
           type: object
           properties:
-            category:
-              type: string
             currency:
               type: string
             description:
@@ -86,4 +82,3 @@ $defs:
       required:
         - identifier
         - password
-        - labels

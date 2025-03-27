@@ -61,20 +61,65 @@ ssp_balance{category="Hosting",currency="$",description="Vultr RegionCode1",iden
 ssp_balance{category="SP",currency="₽",description="Wifire RegionCode1",identifier="123456",poll_interval="30m",provider="WifireRussia"} 172.05
 ```
 
-## Software Settings
+## Application Settings
 The exporter requires 2 types of configuration:
 * Configuration file with defined accounts of data providers
 * JSON schema for configuration file format validation
 
-Configuration files can be JSON or YAML format, the exporter can detect type based on file extension: .json, .yaml or .yml.
+Configuration files can be JSON or YAML format, the code will detect file type based on extension: .json, .yaml or .yml.
 
-#### Configuration file
+#### Configuration File
+Configuration file contains 2 top sections: `service` and `identifiers`.
+The `service` section defines `metric_name`, possible `messages` encoded in the target values, and list of available `user_agents` to randomly select during each provider initialization. Message names are used in the provider's code, see [Writing a Custom Provider](#writing-a-custom-provider) chapter.
+Sample in YAML representation:
+```yaml
+service:
+  metric_name: ssp_balance
+  messages:
+    init: -1000000
+    disabled: -1000001
+    no_answer: -1000002
+    captcha: -1000003
+    cannot_proceed: -1000004
+    rate_limit: -1000005
+    parsing_error: -1000006
+    connection_error: -1000007
+  user_agents:
+    - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33
+    - Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36
+    - Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0
+    - Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36
+    - Mozilla/5.0 (X11; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0
+    - Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0
+```
+
+The `identifiers` section contains a list of available identifiers for each existing provider:
+Key | Description | Mandatory | Type | Default Value
+ -- | -- | -- | -- | --
+identifier | Username or client ID to access Self Service Portal | Yes | String | No
+password | Password or secret to access Self Service Portal | Yes | String | No
+labels | Dictionary of additional labels in key:value format | No | String:Boolean \| Integer \| Float \| String | No
+tls_verify | Whether to check TLS certificate against trusted certificate authorities | No | Boolean | False
+poll_interval | Integer in seconds of interval for polling via scheduler | No | Integer | 3600
+disabled | Prevent data collection | No | Boolean | False
+
+Sample in YAML representation:
+```yaml
+identifiers:
+  ProviderName:
+    - identifier: provider_identifier
+      password: provider_password
+      labels:
+        key1: value1
+        key2: value2
+        keyN: valueN
+      poll_interval: 1800
+```
+
+#### JSON Schema File
 **TBD**
 
-#### JSON Schema file
-**TBD**
-
-####  Environmental augmentation
+####  Environmental Augmentation
 
 Since the exporter initially was designed to be containerized, some settings can be overriden by environment variables or command line arguments.
 
@@ -83,13 +128,13 @@ Argument Name | Variable Name | Description | Default Value
 --config, -c | SSP_EXPORTER_CONFIG_FILE | Path to configuration file | ./config/production_exporter.yaml
 --schema, -s | SSP_EXPORTER_SCHEMA_FILE | Path to JSON schema | ./config/schema.json
 --address, -a | SSP_EXPORTER_BIND_ADDRESS | Network address to bind server | localhost
---port, -p | SSP_EXPORTER_BIND_PORT | Network port to bind server | 9868
+--port, -p | SSP_EXPORTER_BIND_PORT | Network port to bind server | 10032
 --loglevel, -l | SSP_EXPORTER_LOG_LEVEL | Set logging level.<br/>Possible values: NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO
 
 ## Data Visualization
 #### Available Return Codes
 
-To distinguish balance values from possible errors, special mnemonic codes are used:
+To distinguish balance values from possible errors, special mnemonic codes used, which can be easily extended by [`service` section of the Configuration file](#configuration-file):
 
 Value | Description 
 -- | -- 
@@ -171,13 +216,13 @@ To decode these values into human-readable statuses, Grafana's dashboard must ha
 ```
 
 #### Panels
-Visualization `Stat`:
+Visualization as `Stat` panels:
 ![Grafana Dashboard Sample](images/grafana_dashboard_sample-1.png)
 
-Visualization `Table`:
+Visualization as `Table` panels:
 ![Grafana Dashboard Sample](images/grafana_dashboard_sample-2.png)
 
-## Writing a custom provider
+## Writing a Custom Provider
 
 To write your own provider, you need to create a new one Python file under the `providers` directory, name it with a snake-case like `<module_name>.py` where `<module_name>` must be replaced with a real module name.
 
@@ -254,10 +299,14 @@ class ProviderName:
         
         code to collect data from a remote endpoint
 
-        if must also set the `self.last_balance` variable to a float value of
+        it must also set the `self.last_balance` variable to a float value of
         the collected data, e.g.
 
         self.last_balance = float(balance)
+
+        or to appropriate service message if some error happened, i.e.
+
+        self.last_balance = self.messages['connection_error']
 
         >>
 ```
