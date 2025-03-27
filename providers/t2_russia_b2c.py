@@ -5,7 +5,7 @@ ATTENTION!
 THIS MODULE STOPPED WORKING FROM MID-2024 DUE TO INTRODUCED 2FA WITH EMAIL/SMS
 """
 
-from dataclasses import dataclass, InitVar
+from dataclasses import dataclass, field, InitVar
 
 import json
 import requests
@@ -21,7 +21,7 @@ class T2RussiaB2C:
     messages: list[str] = None
     user_agent: str = None
     identifier: str = None
-    labels: dict[str, (bool, int, float, str)] = None
+    labels: dict[str, (bool, int, float, str)] = field(default_factory=dict)
     password: str = None
     disabled: bool = True
     tls_verify: bool = False

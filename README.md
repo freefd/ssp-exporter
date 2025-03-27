@@ -128,7 +128,7 @@ Argument Name | Variable Name | Description | Default Value
 --config, -c | SSP_EXPORTER_CONFIG_FILE | Path to configuration file | ./config/production_exporter.yaml
 --schema, -s | SSP_EXPORTER_SCHEMA_FILE | Path to JSON schema | ./config/schema.json
 --address, -a | SSP_EXPORTER_BIND_ADDRESS | Network address to bind server | localhost
---port, -p | SSP_EXPORTER_BIND_PORT | Network port to bind server | 10032
+--port, -p | SSP_EXPORTER_BIND_PORT | Network port to bind server | 10032 (see [Default port allocations](https://github.com/prometheus/prometheus/wiki/Default-port-allocations) from Prometheus community)
 --loglevel, -l | SSP_EXPORTER_LOG_LEVEL | Set logging level.<br/>Possible values: NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO
 
 ## Data Visualization

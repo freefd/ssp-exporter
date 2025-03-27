@@ -1,6 +1,6 @@
 """ Almatel Russia exporter module """
 
-from dataclasses import dataclass, InitVar
+from dataclasses import dataclass, field, InitVar
 
 import locale
 import json
@@ -19,7 +19,7 @@ class AlmatelRussia:
     messages: list[str] = None
     user_agent: str = None
     identifier: str = None
-    labels: dict[str, (bool, int, float, str)] = None
+    labels: dict[str, (bool, int, float, str)] = field(default_factory=dict)
     password: str = None
     disabled: bool = False
     tls_verify: bool = False
