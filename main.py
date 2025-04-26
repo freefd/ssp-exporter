@@ -84,7 +84,7 @@ def get_args(show_usage: bool = False) -> argparse.Namespace:
     """ Parse command line arguments """
 
     args_parser = argparse.ArgumentParser(
-        description="Ntfy messages to D-Bus org.freedesktop.Notifications"
+        description="Self Service Portal Exporter"
     )
     args_parser.add_argument('--config', '-c',
                              help='Path to configuration file. '
