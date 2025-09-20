@@ -111,7 +111,7 @@ class AlmatelRussia:
                                 '//div[@class="lk__profile--block '
                                 'lk__profile-balance"]/div/div/span'
                                 '[@class="question-block-value"]/text()'
-                            )[0]))
+                            )[0].replace(' ','')))
                         except ValueError as err:
                             self._lgr.logger.error(
                                 '%s: Cannot get balance value: %s',
